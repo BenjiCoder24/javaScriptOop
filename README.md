@@ -1,48 +1,158 @@
-# Hello website!
+# OOP Moving Objects Tutorial
 
-This is a basic HTML starter project you can build on however you like. No need to save. While you develop your site, your changes will happen ✨ immediately in the preview window. On the left you'll see the files that make up your site, including HTML, JavaScript, and CSS. You can upload assets like images or audio in `assets`. The rest is up to you and your imagination. 🦄
+This project demonstrates Object-Oriented Programming (OOP) concepts in JavaScript by creating multiple moving objects on the screen. Each object is initialized via a different class constructor call.
 
-_Last updated: 28 Feb 2023_
+## Project Structure
 
-## What's in this project?
+- `index.html`: The main HTML file that sets up the canvas and includes the script.
+- `script.js`: The JavaScript file containing the OOP classes and animation logic.
+- `style.css`: The CSS file for styling the page and canvas.
+- `README.md`: This file, providing an overview and detailed explanation of the project.
 
-← `README.md`: That's this file, where you can tell people what your cool website does and how you built it.
+## Running the Project
 
-← `index.html`: This is the main web page for your site. The HTML defines the structure and content of the page using _elements_. You'll see references in the HTML to the JS and CSS files. Try clicking the image in the center of the page!
+1. Open the `index.html` file in your browser.
+2. The canvas will display moving objects, each with a different color, demonstrating the use of OOP in JavaScript.
 
-← `style.css`: CSS files add styling rules to your content. The CSS applies styles to the elements in your HTML page. The style rules also make the image move when you click it.
+## Explanation of the Code
 
-← `script.js`: If you're feeling fancy you can add interactivity to your site with JavaScript. The code in the JavaScript file runs when the page loads, and when the visitor clicks the button you can add using the code in the TODO.
+### index.html
 
-Open each file and check out the comments (in gray) for more info.
+This is the main HTML file that sets up the canvas and includes the script.
 
-## Try this next 🏗️
-
-Take a look in `TODO.md` for next steps you can try out in your new site!
-
-___Want a minimal version of this project to build your own website? Check out [Blank Website](https://glitch.com/edit/#!/remix/glitch-blank-website)!___
-
-## Ready to share your site?
-
-Add these meta tags for SEO and social sharing between your page `<head></head>` tags, changing the values for your site:
-
-```
-<link rel="canonical" href="https://glitch-hello-website.glitch.me/" />
-<meta name="description" content="A simple website, built with Glitch. Remix it to get your own."/>
-<meta name="robots" content="index,follow" />
-<meta property="og:title" content="Hello World!" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://glitch-hello-website.glitch.me/" />
-<meta property="og:description" content="A simple website, built with Glitch. Remix it to get your own."/>
-<meta property="og:image" content="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2Fhello-website-social.png?v=1616712748147"/>
-<meta name="twitter:card" content="summary" />
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OOP Moving Objects Tutorial</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+    <script src="script.js"></script>
+  </body>
+</html>
 ```
 
-![Glitch](https://cdn.glitch.com/a9975ea6-8949-4bab-addb-8a95021dc2da%2FLogo_Color.svg?v=1602781328576)
+- The <head> section contains the meta tags and the link to the CSS file.
+- The <body> section contains the <canvas> element where the objects will be drawn and the <script> tag that includes the JavaScript code.
 
-## You built this with Glitch!
+## script.js
+This JavaScript file contains the OOP classes and the animation logic.
 
-[Glitch](https://glitch.com) is a friendly community where millions of people come together to build web apps and websites.
+Base Class: MovingObject
 
-- Need more help? [Check out our Help Center](https://help.glitch.com/) for answers to any common questions.
-- Ready to make it official? [Become a paid Glitch member](https://glitch.com/pricing) to boost your app with private sharing, more storage and memory, domains and more.
+```javascript
+class MovingObject {
+    constructor(x, y, speed) {
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+        this.color = 'red';
+    }
+
+    update() {
+        this.x += this.speed;
+        this.y += this.speed;
+
+        if (this.x > canvas.width || this.y > canvas.height) {
+            this.x = 0;
+            this.y = 0;
+        }
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+```
+
+##Constructor: The constructor method initializes the object with position (x, y), speed, and color.
+- Update Method: The update method changes the position of the object based on its speed. If the object moves outside the canvas, it resets the position to the starting point.
+- Draw Method: The draw method draws the object on the canvas as a colored circle.
+- Derived Classes: TypeOne, TypeTwo, TypeThree
+  
+```javascript
+class TypeOne extends MovingObject {
+    constructor(x, y, speed) {
+        super(x, y, speed);
+        this.color = 'blue';
+    }
+}
+
+class TypeTwo extends MovingObject {
+    constructor(x, y, speed) {
+        super(x, y, speed);
+        this.color = 'green';
+    }
+}
+
+class TypeThree extends MovingObject {
+    constructor(x, y, speed) {
+        super(x, y, speed);
+        this.color = 'yellow';
+    }
+}
+```
+
+- Each derived class extends MovingObject and sets a different color for the objects. They use the super function to call the constructor of the base class.
+
+## Creating an Array of Objects
+
+```javascript
+const objects = [
+    new TypeOne(50, 50, 2),
+    new TypeTwo(100, 100, 3),
+    new TypeThree(150, 150, 4)
+];
+```
+
+- An array of objects is created, each initialized using a different constructor. This array will be used to manage and animate multiple objects on the canvas.
+## Animation Loop
+
+```javascript
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    objects.forEach(obj => {
+        obj.update();
+        obj.draw();
+    });
+    requestAnimationFrame(animate);
+}
+
+animate();
+```
+
+- Canvas Setup: The canvas is selected using document.getElementById and its context is set to 2d. The canvas dimensions are set to the size of the browser window.
+- Animation Loop: The animate function clears the canvas, updates the position of each object, and draws each object on the canvas. requestAnimationFrame is used to call the animate function repeatedly, creating an animation.
+
+##style.css
+This CSS file styles the page and the canvas.
+
+```javascript
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+canvas {
+    background-color: #000;
+    display: block;
+}
+```
+
+- body: Removes the margin and hides the overflow to ensure the canvas takes up the full screen.
+- canvas: Sets the background color of the canvas to black and ensures it is displayed as a block element.
+
+## Summary
+This tutorial demonstrates how to use Object-Oriented Programming in JavaScript to create and animate multiple objects on a canvas. By defining a base class and extending it with derived classes, we can create objects with different properties and behaviors, and manage them efficiently in an animation loop.
